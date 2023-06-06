@@ -1,13 +1,13 @@
 {
-  "name": "@xemelgo/ios-edge-driver",
-  "version": "1.1.7",
+  "name": "ios-edge-driver",
+  "version": "1.0.0",
   "description": "## Edge driver for iOS",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Xemelgo/ios-edge-driver.git"
+    "url": ""
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
@@ -15,10 +15,9 @@
   "keywords": [
     "react-native"
   ],
-  "author": "xemelgo",
+  "author": "Xemelgo",
   "license": "ISC",
   "peerDependencies": {
     "react-native": "^0.69.2"
-  },
-  "homepage": "https://github.com/Xemelgo/ios-edge-driver#readme"
+  }
 }

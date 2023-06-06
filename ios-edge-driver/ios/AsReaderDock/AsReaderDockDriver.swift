@@ -2,11 +2,17 @@ import Foundation
 import AsReaderDockSDK
 
 class AsReaderDockDriver: NSObject, ReaderDriver, AsreaderBarcodeDeviceDelegate, AsReaderRFIDDeviceDelegate, AsReaderDeviceDelegate {
+  private static let POWER_MIN: Float = 13
+  private static let POWER_MAX: Float = 24
+  private static let RSSI_MIN: Float = -75
+  private static let RSSI_MAX: Float = -15
   private let device: DeviceShadow
   private var isReaderConnected: Bool
+  private var isContinuousScanMode: Bool
   private var tagToFind: String?
   private var sendBarcode: (String) -> Void
   private var sendRfid: (Tag) -> Void
+  private var battery: Int
   
   required init(device: DeviceShadow, onBarcodeScan: @escaping (String) -> Void, onRfidScan: @escaping (Tag) -> Void) {
     self.device = device
@@ -14,8 +20,11 @@ class AsReaderDockDriver: NSObject, ReaderDriver, AsreaderBarcodeDeviceDelegate,
     tagToFind = nil
     sendBarcode = onBarcodeScan
     sendRfid = onRfidScan
+    battery = 50
+    isContinuousScanMode = false
     super.init()
     self.device.setDelegate(self)
+    self.device.getOutputPowerLevel()
   }
   
   func getDeviceDetails() throws -> [String: String] {
@@ -23,13 +32,13 @@ class AsReaderDockDriver: NSObject, ReaderDriver, AsreaderBarcodeDeviceDelegate,
       let info = AsReaderInfo()
       return [
         "name": "AsReaderDock",
-        "firmware": info.deviceFirmware,
+        "firmware_version": info.deviceFirmware,
         "hardware": info.deviceHardware,
-        "deviceID": info.deviceID,
+        "device_id": info.deviceID,
         "manufacturer": info.deviceManufacturer,
-        "model number": info.deviceModelNumber,
-        "serial number": info.deviceSerialNumber,
-        "deviceName": info.deviceName
+        "model_number": info.deviceModelNumber,
+        "serial_number": info.deviceSerialNumber,
+        "device_name": info.deviceName
       ]
     }
     throw ReaderDriverError.ReaderNotFoundError
@@ -47,6 +56,7 @@ class AsReaderDockDriver: NSObject, ReaderDriver, AsreaderBarcodeDeviceDelegate,
     if (!device.isOpened()) {
       throw ReaderDriverError.ReaderNotFoundError
     }
+    isContinuousScanMode = false
     isReaderConnected = true
     tagToFind = nil
   }
@@ -56,24 +66,26 @@ class AsReaderDockDriver: NSObject, ReaderDriver, AsreaderBarcodeDeviceDelegate,
       throw ReaderDriverError.ReaderNotFoundError
     }
     isReaderConnected = false
-    tagToFind = nil
-    _ = device.setReaderPower(false, beep: true, vibration: true, led: true, illumination: true, mode: 0)
-    _ = device.setReaderPower(false, beep: true, vibration: true, led: true, illumination: true, mode: 1)
+    self.tagToFind = nil
+    device.setReaderPower(false, beep: true, vibration: true, led: true, illumination: true, mode: 0)
+    device.setReaderPower(false, beep: true, vibration: true, led: true, illumination: true, mode: 1)
   }
   
   func isConnected() -> Bool {
     return isReaderConnected
   }
   
-  func getBatteryPercentage() -> Int {
-    return Int(device.getCurrentBattery())
+  func getBatteryPercentage() throws -> Int {
+    try checkConnection()
+    return battery
   }
   
   func switchToRfidMode() throws {
     try checkConnection()
+    self.tagToFind = nil
     device.setTriggerModeDefault(false)
-    _ = device.setReaderPower(false, beep: true, vibration: true, led: true, illumination: true, mode: 0)
-    _ = device.setReaderPower(true, beep: true, vibration: true, led: true, illumination: true, mode: 1)
+    device.activateRfidReader()
+    isContinuousScanMode = false
   }
   
   func startRfidScan() throws {
@@ -81,29 +93,53 @@ class AsReaderDockDriver: NSObject, ReaderDriver, AsreaderBarcodeDeviceDelegate,
     do {
         sleep(1)
     }
-    _ = device.startReadTagsAndRssi(withTagNum: 0, maxTime: 0, repeatCycle: 0)
+    device.startReadTagsAndRssi(withTagNum: 0, maxTime: 0, repeatCycle: 0)
+    isContinuousScanMode = true
   }
   
   func stopRfidScan() throws {
     try checkConnection()
-    _ = device.stopScan()
+    device.stopScan()
+    isContinuousScanMode = false
   }
   
   func activateSearchMode(_ tagToFind: String) throws {
     try checkConnection()
+    try startRfidScan()
     self.tagToFind = tagToFind
   }
   
-  func stopSearchMode() throws {
+  func stopReading() throws {
     try checkConnection()
-    tagToFind = nil
+    self.tagToFind = nil
+    device.turnOff()
   }
   
   func switchToBarcodeMode() throws {
     try checkConnection()
     device.setTriggerModeDefault(true)
-    _ = device.setReaderPower(false, beep: true, vibration: true, led: true, illumination: true, mode: 1)
-    _ = device.setReaderPower(true, beep: true, vibration: true, led: true, illumination: true, mode: 0)
+    device.activateBarcodeReader()
+    isContinuousScanMode = false
+  }
+  
+  func getReaderPowerRange() throws -> (Int, Int) {
+    return (Int(AsReaderDockDriver.POWER_MIN), Int(AsReaderDockDriver.POWER_MAX))
+  }
+  
+  func getReaderPower() throws -> Float {
+    try checkConnection()
+    let info = AsReaderInfo()
+    return valueToPercentage(info.rfidPower, min: AsReaderDockDriver.POWER_MIN, max: AsReaderDockDriver.POWER_MAX)
+  }
+  
+  func configureReaderPower(_ powerPercentage: Float) throws {
+    try checkConnection()
+    device.setOutputPowerLevel(Int32(percentageToValue(
+      powerPercentage,
+      min: AsReaderDockDriver.POWER_MIN,
+      max: AsReaderDockDriver.POWER_MAX)
+    ))
+    device.getOutputPowerLevel()
   }
   
   func checkConnection() throws {
@@ -128,24 +164,51 @@ class AsReaderDockDriver: NSObject, ReaderDriver, AsreaderBarcodeDeviceDelegate,
   }
   
   func pcEpcRssiReceived(_ pcEpc: Data!, rssi: Int32) {
-    let pcEpc = pcEpc.hexEncodedString()
-    if (
-      !pcEpc.isEmpty &&
-      (tagToFind == nil || (tagToFind != nil && pcEpc == tagToFind))
-    ) {
-      sendRfid(Tag(epc: pcEpc, rssi: Int(rssi), tagCount: 1, tid:""))
+    let tag = pcEpc.hexEncodedString()
+    if (!tag.isEmpty && (tagToFind == nil || tag.contains(tagToFind!))) {
+      sendRfid(Tag(
+        epc: String(tag.dropFirst(4)),
+        rssi: Int(rssi),
+        scaledRssi: Int(valueToPercentage(Float(rssi), min: AsReaderDockDriver.RSSI_MIN, max: AsReaderDockDriver.RSSI_MAX)),
+        tagCount: 1,
+        tid: ""
+      ))
     }
   }
+
+// Having to read twice harms performance, and is only needed for QC Checker app so
+//  func epcReceived(_ epc: Data, tid: Data) {
+//    if (curTag == nil) {
+//      device.stopScan()
+//    } else {
+//      let tag = epc.hexEncodedString()
+//      if (curTag!.epc.contains(tag)) {
+//        let maxLength: Int = 32
+//        curTag?.tid = String(tid.hexEncodedString().prefix(maxLength))
+//        sendRfid(curTag!)
+//        curTag = nil
+//        device.stopScan()
+//      }
+//    }
+//  }
   
   func pushedTriggerButton() {
-    _ = device.startReadTagsAndRssi(withTagNum: 0, maxTime: 0, repeatCycle: 0)
+    device.startReadTagsAndRssi(withTagNum: 0, maxTime: 0, repeatCycle: 0)
   }
   
   func releasedTriggerButton() {
-    _ = device.stopScan()
+    if (!isContinuousScanMode) {
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+        self.device.stopScan()
+      }
+    }
   }
   
-  // required to extend AsReaderDeviceDelegate 
+  func batteryReceived(_ battery: Int32) {
+    self.battery = Int(battery)
+  }
+  
+  // required to extend AsReaderDeviceDelegate
   func plugged(_ plug: Bool) {}
   
   func readerConnected(_ status: Int32) {}

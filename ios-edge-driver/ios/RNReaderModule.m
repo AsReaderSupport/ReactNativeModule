@@ -3,13 +3,21 @@
 
 @interface RCT_EXTERN_MODULE(RNReaderModule, NSObject)
 
+RCT_EXTERN_METHOD(getSupportedReaders:
+  (RCTPromiseResolveBlock)resolve
+  reject:(RCTPromiseRejectBlock)reject
+)
+
 RCT_EXTERN_METHOD(getAvailable:
   (RCTPromiseResolveBlock)resolve
   reject:(RCTPromiseRejectBlock)reject
 )
 
 RCT_EXTERN_METHOD(loadDriver:
-  (NSString)deviceName
+  (NSString)vendor
+  model:(NSString)model
+  modelType:(NSString)modelType
+  inputType:(NSString)inputType
   resolve:(RCTPromiseResolveBlock)resolve
   reject:(RCTPromiseRejectBlock)reject
 )
@@ -71,13 +79,29 @@ RCT_EXTERN_METHOD(activateSearchMode:
   reject:(RCTPromiseRejectBlock)reject
 )
 
-RCT_EXTERN_METHOD(stopSearchMode:
+RCT_EXTERN_METHOD(stopReading:
   (RCTPromiseResolveBlock)resolve
   reject:(RCTPromiseRejectBlock)reject
 )
 
 RCT_EXTERN_METHOD(switchToScanBarcodeMode:
   (RCTPromiseResolveBlock)resolve
+  reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(getReaderPowerRange:
+  (RCTPromiseResolveBlock)resolve
+  reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(getReaderPower:
+  (RCTPromiseResolveBlock)resolve
+  reject:(RCTPromiseRejectBlock)reject
+)
+
+RCT_EXTERN_METHOD(configureReaderPower:
+  (double)powerPercentage
+  resolve:(RCTPromiseResolveBlock)resolve
   reject:(RCTPromiseRejectBlock)reject
 )
 

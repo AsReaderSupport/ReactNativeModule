@@ -8,15 +8,35 @@
 
 /* Begin PBXBuildFile section */
 		7A1C25B028BEB45E00EAFA65 /* DeviceShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A1C25AF28BEB45E00EAFA65 /* DeviceShadow.swift */; };
-		7A1CFA53287FBE0D00EC2A61 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A1CFA52287FBE0D00EC2A61 /* ExternalAccessory.framework */; };
-		7A738D0A28BD5DAA00FED787 /* DeviceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A738D0928BD5DAA00FED787 /* DeviceMock.swift */; };
+		7A5E4D84295D121500D82293 /* AsReaderDockSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A5E4D83295D121500D82293 /* AsReaderDockSDK.framework */; };
+		7A5E4D85295D124600D82293 /* AsReaderDockSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A5E4D83295D121500D82293 /* AsReaderDockSDK.framework */; };
+		7A6B087929A619D900A3E284 /* UtilsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A6B087829A619D900A3E284 /* UtilsTest.swift */; };
 		7A738D1428BD67C100FED787 /* SimulatedDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A738D1328BD67C100FED787 /* SimulatedDriver.swift */; };
 		7A738D1828BD734900FED787 /* DeviceAsReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A738D1728BD734900FED787 /* DeviceAsReader.swift */; };
+		7A829ECB2981EBD4006A4871 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A829ECA2981EBD4006A4871 /* utils.swift */; };
+		7A829ECE2981FECD006A4871 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A829ECA2981EBD4006A4871 /* utils.swift */; };
+		7AAF8D0728D1006B00A4462D /* DeviceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A738D0928BD5DAA00FED787 /* DeviceMock.swift */; };
+		7ACABC9C28DBCFBB007E804A /* ReaderDriverTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACABC9A28DBCFBB007E804A /* ReaderDriverTest.swift */; };
+		7ACABC9D28DBCFBB007E804A /* AsReaderDockDriverTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACABC9B28DBCFBB007E804A /* AsReaderDockDriverTest.swift */; };
+		7ACABC9E28DBCFD1007E804A /* SimulatedDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A738D1328BD67C100FED787 /* SimulatedDriver.swift */; };
+		7ACABC9F28DBD034007E804A /* DeviceShadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A1C25AF28BEB45E00EAFA65 /* DeviceShadow.swift */; };
+		7ACABCA028DBD052007E804A /* AsReaderDockDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ADBBC4D28A43570006494F1 /* AsReaderDockDriver.swift */; };
+		7ACABCA128DBD083007E804A /* ReaderDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ADBBC4828A43570006494F1 /* ReaderDriver.swift */; };
+		7ACABCA228DBD087007E804A /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ADBBC4B28A43570006494F1 /* Tag.swift */; };
+		7ACABCA328DBD08A007E804A /* UnloadedDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ADBBC4C28A43570006494F1 /* UnloadedDriver.swift */; };
 		7ADBBC4128A43333006494F1 /* libRNEdgeDriverIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 134814201AA4EA6300B7C361 /* libRNEdgeDriverIOS.a */; };
 		7ADBBC4F28A43570006494F1 /* ReaderDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ADBBC4828A43570006494F1 /* ReaderDriver.swift */; };
 		7ADBBC5228A43570006494F1 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ADBBC4B28A43570006494F1 /* Tag.swift */; };
 		7ADBBC5328A43570006494F1 /* UnloadedDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ADBBC4C28A43570006494F1 /* UnloadedDriver.swift */; };
 		7ADBBC5428A43570006494F1 /* AsReaderDockDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ADBBC4D28A43570006494F1 /* AsReaderDockDriver.swift */; };
+		7AE410732967931000C3F737 /* ReaderDriverFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AE410712967931000C3F737 /* ReaderDriverFactory.swift */; };
+		7AE410742967931000C3F737 /* SupportedReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AE410722967931000C3F737 /* SupportedReader.swift */; };
+		7AE410792967939E00C3F737 /* AsReaderGunSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE410772967939E00C3F737 /* AsReaderGunSDK.framework */; };
+		7AE4107A2967939E00C3F737 /* AsRingAccessorySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE410782967939E00C3F737 /* AsRingAccessorySDK.framework */; };
+		7AE410852967942900C3F737 /* AsReaderGunDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AE410802967942900C3F737 /* AsReaderGunDriver.swift */; };
+		7AE4108B2967982E00C3F737 /* AsRingAccessorySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE410782967939E00C3F737 /* AsRingAccessorySDK.framework */; };
+		7AE4108C2967982E00C3F737 /* AsReaderGunSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AE410772967939E00C3F737 /* AsReaderGunSDK.framework */; };
+		7AE4108D2967989800C3F737 /* SupportedReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AE410722967931000C3F737 /* SupportedReader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,17 +64,26 @@
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libRNEdgeDriverIOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNEdgeDriverIOS.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A1C25AF28BEB45E00EAFA65 /* DeviceShadow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceShadow.swift; sourceTree = "<group>"; };
-		7A1CFA52287FBE0D00EC2A61 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/System/Library/Frameworks/ExternalAccessory.framework; sourceTree = DEVELOPER_DIR; };
-		7A738D0328BD2F6000FED787 /* RNEdgeDriverIOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RNEdgeDriverIOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A5E4D82295D11E500D82293 /* RNEdgeDriverIOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RNEdgeDriverIOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A5E4D83295D121500D82293 /* AsReaderDockSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AsReaderDockSDK.framework; path = AsReaderDock/AsReaderDockSDK.framework; sourceTree = "<group>"; };
+		7A6B087829A619D900A3E284 /* UtilsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilsTest.swift; sourceTree = "<group>"; };
 		7A738D0928BD5DAA00FED787 /* DeviceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceMock.swift; sourceTree = "<group>"; };
 		7A738D1328BD67C100FED787 /* SimulatedDriver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimulatedDriver.swift; sourceTree = "<group>"; };
 		7A738D1728BD734900FED787 /* DeviceAsReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceAsReader.swift; sourceTree = "<group>"; };
+		7A829ECA2981EBD4006A4871 /* utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
+		7ACABC9A28DBCFBB007E804A /* ReaderDriverTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderDriverTest.swift; sourceTree = "<group>"; };
+		7ACABC9B28DBCFBB007E804A /* AsReaderDockDriverTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsReaderDockDriverTest.swift; sourceTree = "<group>"; };
 		7ADBBC4828A43570006494F1 /* ReaderDriver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderDriver.swift; sourceTree = "<group>"; };
 		7ADBBC4928A43570006494F1 /* RNReaderModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNReaderModule.m; sourceTree = "<group>"; };
 		7ADBBC4A28A43570006494F1 /* RNReaderModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNReaderModule.swift; sourceTree = "<group>"; };
 		7ADBBC4B28A43570006494F1 /* Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		7ADBBC4C28A43570006494F1 /* UnloadedDriver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnloadedDriver.swift; sourceTree = "<group>"; };
 		7ADBBC4D28A43570006494F1 /* AsReaderDockDriver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsReaderDockDriver.swift; sourceTree = "<group>"; };
+		7AE410712967931000C3F737 /* ReaderDriverFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReaderDriverFactory.swift; sourceTree = "<group>"; };
+		7AE410722967931000C3F737 /* SupportedReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportedReader.swift; sourceTree = "<group>"; };
+		7AE410772967939E00C3F737 /* AsReaderGunSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AsReaderGunSDK.framework; path = AsReaderGun/AsReaderGunSDK.framework; sourceTree = "<group>"; };
+		7AE410782967939E00C3F737 /* AsRingAccessorySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AsRingAccessorySDK.framework; path = AsReaderGun/AsRingAccessorySDK.framework; sourceTree = "<group>"; };
+		7AE410802967942900C3F737 /* AsReaderGunDriver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsReaderGunDriver.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,7 +91,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A1CFA53287FBE0D00EC2A61 /* ExternalAccessory.framework in Frameworks */,
+				7AE410792967939E00C3F737 /* AsReaderGunSDK.framework in Frameworks */,
+				7AE4107A2967939E00C3F737 /* AsRingAccessorySDK.framework in Frameworks */,
+				7A5E4D85295D124600D82293 /* AsReaderDockSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,6 +101,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7AE4108B2967982E00C3F737 /* AsRingAccessorySDK.framework in Frameworks */,
+				7AE4108C2967982E00C3F737 /* AsReaderGunSDK.framework in Frameworks */,
+				7A5E4D84295D121500D82293 /* AsReaderDockSDK.framework in Frameworks */,
 				7ADBBC4128A43333006494F1 /* libRNEdgeDriverIOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -88,23 +122,30 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				7A829EC92981EBBC006A4871 /* Utils */,
+				7A738D0B28BD5FD700FED787 /* AsReaderDock */,
+				7AE4107D2967942900C3F737 /* AsReaderGun */,
 				7ADBBC4828A43570006494F1 /* ReaderDriver.swift */,
+				7AE410712967931000C3F737 /* ReaderDriverFactory.swift */,
 				7ADBBC4928A43570006494F1 /* RNReaderModule.m */,
 				7ADBBC4A28A43570006494F1 /* RNReaderModule.swift */,
 				7A738D1328BD67C100FED787 /* SimulatedDriver.swift */,
-				7A738D0B28BD5FD700FED787 /* AsReaderDock */,
+				7AE410722967931000C3F737 /* SupportedReader.swift */,
 				7ADBBC4B28A43570006494F1 /* Tag.swift */,
 				7ADBBC4C28A43570006494F1 /* UnloadedDriver.swift */,
+				7AAF8D0628D0FFF900A4462D /* Test */,
 				134814211AA4EA7D00B7C361 /* Products */,
 				7A1CFA4F287FBE0200EC2A61 /* Frameworks */,
-				7A738D0328BD2F6000FED787 /* RNEdgeDriverIOSTests.xctest */,
+				7A5E4D82295D11E500D82293 /* RNEdgeDriverIOSTests.xctest */,
 			);
 			sourceTree = "<group>";
 		};
 		7A1CFA4F287FBE0200EC2A61 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				7A1CFA52287FBE0D00EC2A61 /* ExternalAccessory.framework */,
+				7AE410772967939E00C3F737 /* AsReaderGunSDK.framework */,
+				7AE410782967939E00C3F737 /* AsRingAccessorySDK.framework */,
+				7A5E4D83295D121500D82293 /* AsReaderDockSDK.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -114,10 +155,36 @@
 			children = (
 				7A1C25AF28BEB45E00EAFA65 /* DeviceShadow.swift */,
 				7ADBBC4D28A43570006494F1 /* AsReaderDockDriver.swift */,
-				7A738D0928BD5DAA00FED787 /* DeviceMock.swift */,
 				7A738D1728BD734900FED787 /* DeviceAsReader.swift */,
 			);
 			path = AsReaderDock;
+			sourceTree = "<group>";
+		};
+		7A829EC92981EBBC006A4871 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				7A829ECA2981EBD4006A4871 /* utils.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		7AAF8D0628D0FFF900A4462D /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				7ACABC9B28DBCFBB007E804A /* AsReaderDockDriverTest.swift */,
+				7ACABC9A28DBCFBB007E804A /* ReaderDriverTest.swift */,
+				7A738D0928BD5DAA00FED787 /* DeviceMock.swift */,
+				7A6B087829A619D900A3E284 /* UtilsTest.swift */,
+			);
+			path = Test;
+			sourceTree = "<group>";
+		};
+		7AE4107D2967942900C3F737 /* AsReaderGun */ = {
+			isa = PBXGroup;
+			children = (
+				7AE410802967942900C3F737 /* AsReaderGunDriver.swift */,
+			);
+			path = AsReaderGun;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -155,7 +222,7 @@
 			);
 			name = RNEdgeDriverIOSTests;
 			productName = RNEdgeDriverIOSTests;
-			productReference = 7A738D0328BD2F6000FED787 /* RNEdgeDriverIOSTests.xctest */;
+			productReference = 7A5E4D82295D11E500D82293 /* RNEdgeDriverIOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -213,14 +280,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7ADBBC5428A43570006494F1 /* AsReaderDockDriver.swift in Sources */,
+				7AE410852967942900C3F737 /* AsReaderGunDriver.swift in Sources */,
 				7A738D1828BD734900FED787 /* DeviceAsReader.swift in Sources */,
 				7A1C25B028BEB45E00EAFA65 /* DeviceShadow.swift in Sources */,
-				7ADBBC5428A43570006494F1 /* AsReaderDockDriver.swift in Sources */,
-				7ADBBC5328A43570006494F1 /* UnloadedDriver.swift in Sources */,
+				7AE410732967931000C3F737 /* ReaderDriverFactory.swift in Sources */,
+				7A738D1428BD67C100FED787 /* SimulatedDriver.swift in Sources */,
+				7AE410742967931000C3F737 /* SupportedReader.swift in Sources */,
 				7ADBBC4F28A43570006494F1 /* ReaderDriver.swift in Sources */,
 				7ADBBC5228A43570006494F1 /* Tag.swift in Sources */,
-				7A738D1428BD67C100FED787 /* SimulatedDriver.swift in Sources */,
-				7A738D0A28BD5DAA00FED787 /* DeviceMock.swift in Sources */,
+				7ADBBC5328A43570006494F1 /* UnloadedDriver.swift in Sources */,
+				7A829ECB2981EBD4006A4871 /* utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -228,6 +298,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7ACABCA028DBD052007E804A /* AsReaderDockDriver.swift in Sources */,
+				7ACABC9D28DBCFBB007E804A /* AsReaderDockDriverTest.swift in Sources */,
+				7AAF8D0728D1006B00A4462D /* DeviceMock.swift in Sources */,
+				7ACABC9F28DBD034007E804A /* DeviceShadow.swift in Sources */,
+				7ACABCA128DBD083007E804A /* ReaderDriver.swift in Sources */,
+				7ACABC9C28DBCFBB007E804A /* ReaderDriverTest.swift in Sources */,
+				7ACABC9E28DBCFD1007E804A /* SimulatedDriver.swift in Sources */,
+				7A6B087929A619D900A3E284 /* UtilsTest.swift in Sources */,
+				7AE4108D2967989800C3F737 /* SupportedReader.swift in Sources */,
+				7ACABCA228DBD087007E804A /* Tag.swift in Sources */,
+				7ACABCA328DBD08A007E804A /* UnloadedDriver.swift in Sources */,
+				7A829ECE2981FECD006A4871 /* utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,6 +413,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/AsReaderDock",
+					"$(PROJECT_DIR)/AsReaderGun",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -357,6 +441,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/AsReaderDock",
+					"$(PROJECT_DIR)/AsReaderGun",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -400,6 +486,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/AsReaderDock",
+					"$(PROJECT_DIR)/AsReaderGun",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -444,6 +532,8 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/AsReaderDock",
+					"$(PROJECT_DIR)/AsReaderGun",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;

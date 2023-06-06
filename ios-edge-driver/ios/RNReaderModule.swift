@@ -1,23 +1,41 @@
-import Foundation
 import React
 
 @objc(RNReaderModule)
 class RNReaderModule : RCTEventEmitter {
   private var reader: ReaderDriver = UnloadedDriver()
+  private static let supportedReaders: [SupportedReader] = [
+    SupportedReader(vendor: "AsReader", model: "ASR-0230D", modelType: "AsReaderDock", inputType: .usb),
+    SupportedReader(vendor: "AsReader", model: "ASR-L251G", modelType: "AsReaderGun", inputType: .usb),
+  ]
+  
+  @objc func getSupportedReaders(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+    resolve(RNReaderModule.supportedReaders.map { $0.asDictionary() })
+  }
   
   @objc func getAvailable(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
-    var available: [String] = []
-    let asReaderDockDriver: ReaderDriver = AsReaderDockDriver(device: DeviceAsReader(), onBarcodeScan: sendBarcode, onRfidScan: sendRfid)
-    let simulatedDriver: ReaderDriver = SimulatedDriver(onBarcodeScan: sendBarcode, onRfidScan: sendRfid)
-
-    simulatedDriver.isAvailable() ? available.append("simulated") : nil
-    asReaderDockDriver.isAvailable() ? available.append("AsReaderDock") : nil
-
+    var available: [[String: String]] = []
+    for supportedReader in RNReaderModule.supportedReaders {
+      let r = ReaderDriverFactory.create(reader: supportedReader, onBarcodeScan: sendBarcode, onRfidScan: sendRfid)
+      if r.isAvailable() {
+        var readerDetails = supportedReader.asDictionary()
+        do {
+          try r.connect("")
+          readerDetails["serialNumber"] = try r.getDeviceDetails()["serial_number"]
+        } catch {
+          readerDetails["serialNumber"] = ""
+        }
+        
+        available.append(readerDetails)
+      }
+    }
     resolve(available)
   }
 
   @objc func loadDriver(
-    _ deviceName: String,
+    _ vendor: String,
+    model: String,
+    modelType: String,
+    inputType: String,
     resolve:RCTPromiseResolveBlock,
     reject:RCTPromiseRejectBlock
   ) {
@@ -26,19 +44,34 @@ class RNReaderModule : RCTEventEmitter {
     } catch {
       // Could not disconnect because the device is not plugged/connected
     }
-    reader = UnloadedDriver()
+    let readerToLoad = SupportedReader(
+      vendor: vendor,
+      model: model,
+      modelType: modelType,
+      inputType: ReaderInputType(string: inputType)
+    )
     
-    switch deviceName {
-    case "AsReaderDock":
-      reader = AsReaderDockDriver(device: DeviceAsReader(), onBarcodeScan: sendBarcode, onRfidScan: sendRfid)
-      resolve("Loaded AsReaderDock driver")
-      
-    case "simulated":
-      reader = SimulatedDriver(onBarcodeScan: sendBarcode, onRfidScan: sendRfid)
-      resolve("Loaded simulated driver")
-      
-    default:
-      reject("LoadDriverError", "LoadDriverError: Unsupported device name in call to loadDriver", NSError(domain: "", code: 400))
+    if readerToLoad.inputType == nil {
+      reject(
+        "LoadDriverError",
+        "LoadDriverError: Unsupported input type \(inputType) in call to loadDriver",
+        NSError(domain: "", code: 400)
+      )
+    }
+
+    reader = ReaderDriverFactory.create(
+      reader: readerToLoad,
+      onBarcodeScan: sendBarcode,
+      onRfidScan: sendRfid
+    )
+    if !(reader is UnloadedDriver) {
+      resolve("Loaded \(readerToLoad.model) driver")
+    } else {
+      reject(
+        "LoadDriverError",
+        "LoadDriverError: Unsupported device type \(modelType) in call to loadDriver",
+        NSError(domain: "", code: 400)
+      )
     }
   }
 
@@ -88,12 +121,13 @@ class RNReaderModule : RCTEventEmitter {
     resolve(reader.isConnected())
   }
   
-  @objc func getBatteryPercentage(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
-    do {
-      try reader.getBatteryPercentage()
-      resolve("SUCCESS")
-    } catch let error {
-      reject("GetBatteryPercentageError", "\(error.localizedDescription) prior to call to \(#function)", error)
+  @objc func getBatteryPercentage(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
+    DispatchQueue.main.async {
+      do {
+        resolve(try self.reader.getBatteryPercentage())
+      } catch let error {
+        reject("GetBatteryPercentageError", "\(error.localizedDescription) prior to call to \(#function)", error)
+      }
     }
   }
   
@@ -120,7 +154,6 @@ class RNReaderModule : RCTEventEmitter {
       try reader.stopRfidScan()
       resolve("SUCCESS")
     } catch let error {
-      
       reject("StopRfidScanError", "\(error.localizedDescription) prior to call to \(#function)", error)
     }
   }
@@ -138,12 +171,12 @@ class RNReaderModule : RCTEventEmitter {
     }
   }
   
-  @objc func stopSearchMode(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
+  @objc func stopReading(_ resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) {
     do {
-      try reader.stopSearchMode()
+      try reader.stopReading()
       resolve("SUCCESS")
     } catch let error {
-      reject("StopSearchModeError", "\(error.localizedDescription) prior to call to \(#function)", error)
+      reject("StopReadingError", "\(error.localizedDescription) prior to call to \(#function)", error)
     }
   }
   
@@ -156,12 +189,49 @@ class RNReaderModule : RCTEventEmitter {
     }
   }
   
+  @objc func getReaderPowerRange(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    do {
+      let range = try reader.getReaderPowerRange()
+      resolve(["minPower": range.0, "maxPower": range.1])
+    } catch let error {
+      reject("GetReaderPowerRange", "\(error.localizedDescription) prior to call to \(#function)", error)
+    }
+  }
+  
+  @objc func getReaderPower(_ resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+    do {
+      resolve(try reader.getReaderPower())
+    } catch let error {
+      reject("GetReaderPower", "\(error.localizedDescription) prior to call to \(#function)", error)
+    }
+  }
+  
+  @objc func configureReaderPower(
+    _ powerPercentage: Double,
+    resolve: RCTPromiseResolveBlock,
+    reject: RCTPromiseRejectBlock
+  ) {
+    do {
+      try reader.configureReaderPower(Float(powerPercentage))
+      resolve("SUCCESS")
+    } catch let error {
+      reject("ActivateSearchModeError", "\(error.localizedDescription) prior to call to \(#function)", error)
+    }
+  }
+    
   func sendBarcode(barcode: String) {
-    sendEvent(withName: "barcodeScan", body: barcode)
+    sendEvent(withName: "barcodeScan", body: [barcode])
   }
   
   func sendRfid(tag: Tag) {
-    sendEvent(withName: "rfidRead", body: ["epc": tag.epc, "rssi": tag.rssi, "tagCount": tag.tagCount, "tid": tag.tid])
+//    TODO: add caching so that each tag is not sent individually, preventing lag if many tags are continuously read
+    sendEvent(withName: "rfidRead", body: [[
+      "epc": tag.epc,
+      "rssi": tag.rssi,
+      "scaledRssi": tag.scaledRssi,
+      "tagCount": tag.tagCount,
+      "tid": tag.tid
+    ]])
   }
   
   @objc override static func requiresMainQueueSetup() -> Bool {
@@ -172,4 +242,3 @@ class RNReaderModule : RCTEventEmitter {
     return ["barcodeScan", "rfidRead"]
   }
 }
-

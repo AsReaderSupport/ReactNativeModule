@@ -6,6 +6,7 @@ class SimulatedDriver : NSObject, ReaderDriver {
   private var isRfidOn: Bool
   private var isRfidScan: Bool
   private var isBarcodeOn: Bool
+  private var powerPercentage: Float
   private var sendBarcode: (String) -> Void
   private var sendRfid: (Tag) -> Void
   
@@ -15,6 +16,7 @@ class SimulatedDriver : NSObject, ReaderDriver {
     isRfidOn = false
     isRfidScan = false
     isBarcodeOn = false
+    powerPercentage = 100
     sendBarcode = onBarcodeScan
     sendRfid = onRfidScan
   }
@@ -52,55 +54,54 @@ class SimulatedDriver : NSObject, ReaderDriver {
   }
   
   func switchToRfidMode() throws {
-    if (isReaderConnected) {
-      isBarcodeOn = false
-      isRfidOn = true
-    } else {
-      throw ReaderDriverError.ReaderConnectionError
-    }
+    try checkConnection()
+    isBarcodeOn = false
+    isRfidOn = true
   }
   
   func startRfidScan() throws {
-    if (isReaderConnected) {
-      isRfidOn = true
-      isRfidScan = true
-    } else {
-      throw ReaderDriverError.ReaderConnectionError
-    }
+    try checkConnection()
+    try switchToRfidMode()
+    isRfidOn = true
+    isRfidScan = true
   }
   
   func stopRfidScan() throws {
-    if (isReaderConnected && isRfidOn) {
-      isRfidScan = false
-    } else {
-      throw ReaderDriverError.ReaderConnectionError
-    }
+    try checkConnection()
+    isRfidScan = false
   }
   
   func activateSearchMode(_ tagToFind: String) throws {
-    if (isReaderConnected) {
-      self.tagToFind = tagToFind
-    } else {
-      throw ReaderDriverError.ReaderConnectionError
-    }
+    try checkConnection()
+    self.tagToFind = tagToFind
   }
   
-  func stopSearchMode() throws {
-    if (isReaderConnected) {
-      tagToFind = nil
-    } else {
-      throw ReaderDriverError.ReaderConnectionError
-    }
+  func stopReading() throws {
+    try checkConnection()
+    tagToFind = nil
+    isRfidOn = false
+    isBarcodeOn = false
   }
   
   func switchToBarcodeMode() throws {
-    if (isReaderConnected) {
-      isRfidOn = false
-      isRfidScan = false
-      isBarcodeOn = true
-    } else {
-      throw ReaderDriverError.ReaderConnectionError
-    }
+    try checkConnection()
+    isRfidOn = false
+    isRfidScan = false
+    isBarcodeOn = true
+  }
+  
+  func getReaderPowerRange() throws -> (Int, Int) {
+    return (0, 30)
+  }
+  
+  func getReaderPower() throws -> Float {
+    try checkConnection()
+    return powerPercentage
+  }
+  
+  func configureReaderPower(_ powerPercentage: Float) throws {
+    try checkConnection()
+    self.powerPercentage = powerPercentage
   }
   
   func simulateBarcodeScan(_ barcodes: [String]) throws {
@@ -114,7 +115,8 @@ class SimulatedDriver : NSObject, ReaderDriver {
   }
   
   func simulateTagRead(_ tags: [Tag]) throws {
-    if (isReaderConnected && isRfidOn) {
+    try checkConnection()
+    if (isReaderConnected && isRfidOn && isRfidScan) {
       for tag in tags {
         if (tagToFind == nil || (tagToFind != nil && tag.epc == tagToFind)) {
           sendRfid(tag)
@@ -122,6 +124,12 @@ class SimulatedDriver : NSObject, ReaderDriver {
       }
     } else {
       throw NSError(domain: "RFIDReaderNotActivatedError", code: 403)
+    }
+  }
+  
+  func checkConnection() throws {
+    if (!isReaderConnected) {
+      throw ReaderDriverError.ReaderConnectionError
     }
   }
 }

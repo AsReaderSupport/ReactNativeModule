@@ -1,10 +1,5 @@
-import Foundation
-
-class UnloadedDriver : NSObject, ReaderDriver {
-
-  override init() {
-    super.init()
-  }
+class UnloadedDriver: ReaderDriver {
+  init() {}
   
   required init(onBarcodeScan: @escaping (String) -> Void, onRfidScan: @escaping (Tag) -> Void) {}
 
@@ -50,11 +45,23 @@ class UnloadedDriver : NSObject, ReaderDriver {
     throw ReaderDriverError.NoDriverLoadedError
   }
   
-  func stopSearchMode() throws {
+  func stopReading() throws {
     throw ReaderDriverError.NoDriverLoadedError
   }
   
   func switchToBarcodeMode() throws {
+    throw ReaderDriverError.NoDriverLoadedError
+  }
+  
+  func getReaderPowerRange() throws -> (Int, Int) {
+    throw ReaderDriverError.NoDriverLoadedError
+  }
+  
+  func getReaderPower() throws -> Float {
+    throw ReaderDriverError.NoDriverLoadedError
+  }
+  
+  func configureReaderPower(_ powerPercentage: Float) throws {
     throw ReaderDriverError.NoDriverLoadedError
   }
   
@@ -63,14 +70,6 @@ class UnloadedDriver : NSObject, ReaderDriver {
   }
   
   func onRfidScan(callback: @escaping (Tag) -> Void) throws {
-    throw ReaderDriverError.NoDriverLoadedError
-  }
-  
-  func simulateBarcodeScan(_ barcodes: [String]) throws {
-    throw ReaderDriverError.NoDriverLoadedError
-  }
-  
-  func simulateTagRead(_ tags: [Tag]) throws {
     throw ReaderDriverError.NoDriverLoadedError
   }
   
