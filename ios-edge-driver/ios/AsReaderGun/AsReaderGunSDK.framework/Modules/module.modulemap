@@ -1,6 +1,0 @@
-framework module AsReaderGunSDK {
-  umbrella header "AsReaderGunSDK.h"
-
-  export *
-  module * { export * }
-}
