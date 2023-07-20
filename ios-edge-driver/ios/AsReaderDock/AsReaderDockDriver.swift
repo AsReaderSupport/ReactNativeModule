@@ -7,6 +7,7 @@ class AsReaderDockDriver: NSObject, ReaderDriver, AsreaderBarcodeDeviceDelegate,
   private static let RSSI_MIN: Float = -75
   private static let RSSI_MAX: Float = -15
   private let device: DeviceShadow
+  private var curTag: Tag?
   private var isReaderConnected: Bool
   private var isContinuousScanMode: Bool
   private var tagToFind: String?
@@ -20,7 +21,7 @@ class AsReaderDockDriver: NSObject, ReaderDriver, AsreaderBarcodeDeviceDelegate,
     tagToFind = nil
     sendBarcode = onBarcodeScan
     sendRfid = onRfidScan
-    battery = 50
+    battery = 0
     isContinuousScanMode = false
     super.init()
     self.device.setDelegate(self)
@@ -67,8 +68,7 @@ class AsReaderDockDriver: NSObject, ReaderDriver, AsreaderBarcodeDeviceDelegate,
     }
     isReaderConnected = false
     self.tagToFind = nil
-    device.setReaderPower(false, beep: true, vibration: true, led: true, illumination: true, mode: 0)
-    device.setReaderPower(false, beep: true, vibration: true, led: true, illumination: true, mode: 1)
+    device.turnOff()
   }
   
   func isConnected() -> Bool {
@@ -77,7 +77,7 @@ class AsReaderDockDriver: NSObject, ReaderDriver, AsreaderBarcodeDeviceDelegate,
   
   func getBatteryPercentage() throws -> Int {
     try checkConnection()
-    return battery
+    return max(Int(device.getCurrentBattery()), battery)
   }
   
   func switchToRfidMode() throws {
@@ -93,7 +93,7 @@ class AsReaderDockDriver: NSObject, ReaderDriver, AsreaderBarcodeDeviceDelegate,
     do {
         sleep(1)
     }
-    device.startReadTagsAndRssi(withTagNum: 0, maxTime: 0, repeatCycle: 0)
+    device.startReadTagsAndRssi(withTagNum: 1, maxTime: 0, repeatCycle: 0)
     isContinuousScanMode = true
   }
   
@@ -165,35 +165,44 @@ class AsReaderDockDriver: NSObject, ReaderDriver, AsreaderBarcodeDeviceDelegate,
   
   func pcEpcRssiReceived(_ pcEpc: Data!, rssi: Int32) {
     let tag = pcEpc.hexEncodedString()
-    if (!tag.isEmpty && (tagToFind == nil || tag.contains(tagToFind!))) {
-      sendRfid(Tag(
+    if (tagToFind == nil || tag == tagToFind) {
+      curTag = Tag(
         epc: String(tag.dropFirst(4)),
         rssi: Int(rssi),
         scaledRssi: Int(valueToPercentage(Float(rssi), min: AsReaderDockDriver.RSSI_MIN, max: AsReaderDockDriver.RSSI_MAX)),
         tagCount: 1,
         tid: ""
-      ))
+      )
+      device.startReadTagAndTid(withTagNum: 0, maxTime: 0, repeatCycle: 0)
+      // TODO: Consider adding Swift equivalent of Java ticket to only send this once, not for each tag.
+      DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        self.curTag = nil
+        self.device.stopScan()
+        if (self.isContinuousScanMode) {
+          self.device.startReadTagsAndRssi(withTagNum: 1, maxTime: 0, repeatCycle: 0)
+        }
+      }
     }
   }
 
 // Having to read twice harms performance, and is only needed for QC Checker app so
-//  func epcReceived(_ epc: Data, tid: Data) {
-//    if (curTag == nil) {
-//      device.stopScan()
-//    } else {
-//      let tag = epc.hexEncodedString()
-//      if (curTag!.epc.contains(tag)) {
-//        let maxLength: Int = 32
-//        curTag?.tid = String(tid.hexEncodedString().prefix(maxLength))
-//        sendRfid(curTag!)
-//        curTag = nil
-//        device.stopScan()
-//      }
-//    }
-//  }
+  func epcReceived(_ epc: Data, tid: Data) {
+    if (curTag == nil) {
+      device.stopScan()
+    } else {
+      let tag = epc.hexEncodedString()
+      if (curTag!.epc.contains(tag)) {
+        let maxLength: Int = 32
+        curTag?.tid = String(tid.hexEncodedString().prefix(maxLength))
+        sendRfid(curTag!)
+        curTag = nil
+        device.stopScan()
+      }
+    }
+  }
   
   func pushedTriggerButton() {
-    device.startReadTagsAndRssi(withTagNum: 0, maxTime: 0, repeatCycle: 0)
+    device.startReadTagsAndRssi(withTagNum: 1, maxTime: 0, repeatCycle: 0)
   }
   
   func releasedTriggerButton() {

@@ -24,11 +24,15 @@ class DeviceAsReader: AsReaderRFIDDevice, DeviceShadow  {
   
   func activateBarcodeReader() {
     self.setReaderPower(false, beep: true, vibration: true, led: true, illumination: true, mode: RFID_MODE)
+    let ms = 1000
+    usleep(useconds_t(200 * ms))
     self.setReaderPower(true, beep: true, vibration: true, led: true, illumination: true, mode: BARCODE_MODE)
   }
   
   func activateRfidReader() {
     self.setReaderPower(false, beep: true, vibration: true, led: true, illumination: true, mode: BARCODE_MODE)
+    let ms = 1000
+    usleep(useconds_t(100 * ms))
     self.setReaderPower(true, beep: true, vibration: true, led: true, illumination: true, mode: RFID_MODE)
   }
   
